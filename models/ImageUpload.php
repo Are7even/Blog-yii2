@@ -25,19 +25,28 @@ class ImageUpload extends Model
         return \Yii::getAlias('@web') . 'uploads/';
     }
 
+    static function deleteCurrentImage($currentImage){
+        if (self::fileExists($currentImage)) {
+            unlink(self::getFolder() . $currentImage);
+        }
+    }
+
+    static function fileExists($currentImage){
+        return file_exists(self::getFolder().$currentImage);
+    }
+
 
     public function uploadFile(UploadedFile $file, $currentImage)
     {
         $this->image = $file;
 
         if ($this->validate()) {
-            if (file_exists(self::getFolder() . $currentImage)) {
-                unlink(self::getFolder() . $currentImage);
-            }
+            self::deleteCurrentImage($currentImage);
 
             $filename = strtolower(md5(uniqid($file->baseName)) . '.' . $file->extension);;
 
             $file->saveAs(self::getFolder() . $filename);
+
             return $filename;
         }
 
