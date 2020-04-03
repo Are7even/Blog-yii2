@@ -1,14 +1,12 @@
 <?php
 
-
 namespace app\models;
 
-
+use Yii;
 use yii\base\Model;
 use yii\web\UploadedFile;
 
-class ImageUpload extends Model
-{
+class ImageUpload extends Model{
 
     public $image;
 
@@ -16,23 +14,8 @@ class ImageUpload extends Model
     {
         return [
             [['image'], 'required'],
-            [['image'], 'file', 'extensions' => 'jpg,png,jpeg']
+            [['image'], 'file', 'extensions' => 'jpg,png']
         ];
-    }
-
-    static function getFolder()
-    {
-        return \Yii::getAlias('@web') . 'uploads/';
-    }
-
-    static function deleteCurrentImage($currentImage){
-        if (self::fileExists($currentImage)) {
-            unlink(self::getFolder() . $currentImage);
-        }
-    }
-
-    static function fileExists($currentImage){
-        return file_exists(self::getFolder().$currentImage);
     }
 
 
@@ -40,17 +23,46 @@ class ImageUpload extends Model
     {
         $this->image = $file;
 
-        if ($this->validate()) {
-            self::deleteCurrentImage($currentImage);
-
-            $filename = strtolower(md5(uniqid($file->baseName)) . '.' . $file->extension);;
-
-            $file->saveAs(self::getFolder() . $filename);
-
-            return $filename;
+        if($this->validate())
+        {
+            $this->deleteCurrentImage($currentImage);
+            return $this->saveImage();
         }
 
     }
 
+    private function getFolder()
+    {
+        return Yii::getAlias('@web') . 'uploads/';
+    }
 
+    private function generateFilename()
+    {
+        return strtolower(md5(uniqid($this->image->baseName)) . '.' . $this->image->extension);
+    }
+
+    public function deleteCurrentImage($currentImage)
+    {
+        if($this->fileExists($currentImage))
+        {
+            unlink($this->getFolder() . $currentImage);
+        }
+    }
+
+    public function fileExists($currentImage)
+    {
+        if(!empty($currentImage) && $currentImage != null)
+        {
+            return file_exists($this->getFolder() . $currentImage);
+        }
+    }
+
+    public function saveImage()
+    {
+        $filename = $this->generateFilename();
+
+        $this->image->saveAs($this->getFolder() . $filename);
+
+        return $filename;
+    }
 }
