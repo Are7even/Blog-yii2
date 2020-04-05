@@ -69,6 +69,7 @@ class Article extends \yii\db\ActiveRecord
     {
         $this->image = $filename;
         $this->save(false);
+        return true;
     }
 
 

@@ -119,7 +119,7 @@ class ArticleController extends Controller
      * @return Article the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
-    protected function findModel($id)
+    public function findModel($id)
     {
         if (($model = Article::findOne($id)) !== null) {
             return $model;
@@ -139,6 +139,7 @@ class ArticleController extends Controller
             {
                 return $this->redirect(['view','id'=>$article->id]);
             }
+
         }
 
         return $this->render('image', ['model' => $model]);
