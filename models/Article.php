@@ -39,10 +39,10 @@ class Article extends \yii\db\ActiveRecord
         return [
             [['description', 'content'], 'string'],
             [['date'], 'safe'],
-            [['date'],'default','value'=>date('Y-m-d')],
+            [['date'], 'default', 'value' => date('Y-m-d')],
             [['viewed', 'user_id', 'status', 'category_id'], 'integer'],
             [['title', 'image'], 'string', 'max' => 255],
-            [['title'],'required'],
+            [['title'], 'required'],
         ];
     }
 
@@ -71,11 +71,13 @@ class Article extends \yii\db\ActiveRecord
         return $this->save(false);
     }
 
-    public function getImage(){
-        return ($this->image) ? '/uploads/'.$this->image : '/no-image.png';
+    public function getImage()
+    {
+        return ($this->image) ? '/uploads/' . $this->image : '/no-image.png';
     }
 
-    public function deleteImage(){
+    public function deleteImage()
+    {
         $imageUploadModel = new ImageUpload();
         $imageUploadModel->deleteCurrentImage($this->image);
     }
@@ -91,6 +93,17 @@ class Article extends \yii\db\ActiveRecord
         return $this->hasOne(Category::className(), ['id' => 'category_id']);
     }
 
+
+    public function saveCategory($category_id)
+    {
+       $category = Category::findOne($category_id);
+       if ($category !== null)
+       {
+           $this->link('category',$category);
+           return true;
+       }
+
+    }
 
 
 }
