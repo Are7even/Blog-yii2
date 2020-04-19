@@ -3,6 +3,7 @@
 namespace app\modules\admin\controllers;
 
 use app\models\Category;
+use app\models\Tag;
 use PHPUnit\Framework\StaticAnalysis\HappyPath\AssertNotInstanceOf\A;
 use Yii;
 use app\models\Article;
@@ -148,6 +149,10 @@ class ArticleController extends Controller
     }
 
     public function actionSetCategory($id){
+
+       // $category = Category::findOne($id);
+
+
         $article = $this->findModel($id);
         $selectedCategory = $article->category->id;
         $categories = ArrayHelper::map(Category::find()->all(),'id','title');
@@ -169,5 +174,25 @@ class ArticleController extends Controller
             'categories'=>$categories,
         ]);
     }
+
+    public function actionSetTags($id){
+      $article = $this->findModel($id);
+      $selectedTags = $article->getSelectedTags();
+      $tags = ArrayHelper::map(Tag::find()->all(),'id','title');
+      if (Yii::$app->request->isPost){
+          $tags = Yii::$app->request->post('tags');
+          $article->saveTags($tags);
+          return $this->redirect(['view','id'=>$article->id]);
+      }
+
+      return $this->render('tags',[
+         'selectedTags'=>$selectedTags,
+          'tags'=>$tags,
+      ]);
+    }
+
+
+
+
 
 }
