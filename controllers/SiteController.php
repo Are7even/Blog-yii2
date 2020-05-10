@@ -2,7 +2,11 @@
 
 namespace app\controllers;
 
+use app\models\Article;
+use app\models\ArticleSearch;
 use Yii;
+use yii\data\ActiveDataProvider;
+use yii\data\Pagination;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\Response;
@@ -51,9 +55,27 @@ class SiteController extends Controller
     }
 
 
-    public function actionIndex()
+    function actionIndex()
     {
-        return $this->render('index');
+//        $query =
+//        $countQuery = clone $query;
+//        $pagination = new Pagination(['totalCount' => $countQuery,'pageSize'=>2]);
+//        $articles = $query->offset($pagination->offset)
+//            ->limit($pagination->limit)
+//            ->all();
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => Article::find()->where(['status' => 1])->orderBy('id DESC'),
+            'pagination' => [
+                'pageSize' => 10,
+            ],
+        ]);
+
+        return $this->render('index', [
+            //           'articleModel' => $articleModel,
+//            'pagination' => $pagination,
+            'listDataProvider'=>$dataProvider,
+        ]);
     }
 
 
