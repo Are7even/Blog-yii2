@@ -36,4 +36,8 @@ class Category extends \yii\db\ActiveRecord
 
     }
 
+    public function getArticlesCount()
+    {
+        return $this->getArticles()->count();
+    }
 }

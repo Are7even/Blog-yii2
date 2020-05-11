@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use app\models\Article;
 use app\models\ArticleSearch;
+use app\models\Category;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\data\Pagination;
@@ -57,24 +58,34 @@ class SiteController extends Controller
 
     function actionIndex()
     {
-//        $query =
-//        $countQuery = clone $query;
-//        $pagination = new Pagination(['totalCount' => $countQuery,'pageSize'=>2]);
-//        $articles = $query->offset($pagination->offset)
-//            ->limit($pagination->limit)
-//            ->all();
-
-        $dataProvider = new ActiveDataProvider([
+        $articles = new ActiveDataProvider([
             'query' => Article::find()->where(['status' => 1])->orderBy('id DESC'),
             'pagination' => [
                 'pageSize' => 10,
             ],
         ]);
 
+
+        $popular = new ActiveDataProvider([
+            'query' => Article::find()->orderBy('viewed DESC')->limit(3),
+            'pagination' => false,
+        ]);
+
+        $recent = new ActiveDataProvider([
+            'query' => Article::find()->orderBy('date DESC')->limit(4),
+            'pagination' => false,
+        ]);
+
+        $category = new ActiveDataProvider([
+            'query' => Category::find(),
+            'pagination' => false,
+        ]);
+
         return $this->render('index', [
-            //           'articleModel' => $articleModel,
-//            'pagination' => $pagination,
-            'listDataProvider'=>$dataProvider,
+            'articles'=>$articles,
+            'popular'=>$popular,
+            'recent'=>$recent,
+            'category'=>$category,
         ]);
     }
 

@@ -23,7 +23,7 @@ class Article extends \yii\db\ActiveRecord
         return [
             [['description', 'content'], 'string'],
             [['date'], 'safe'],
-            [['date'], 'default', 'value' => date('Y-m-d')],
+            [['date'], 'default', 'value' => date('Y-m-j')],
             [['viewed', 'user_id', 'status', 'category_id'], 'integer'],
             [['title', 'image'], 'string', 'max' => 255],
             [['title'], 'required'],
@@ -121,6 +121,9 @@ class Article extends \yii\db\ActiveRecord
     }
 
 
+    public function getDate(){
+        return Yii::$app->formatter->asDate($this->date, 'long');
+    }
 
 
 }
