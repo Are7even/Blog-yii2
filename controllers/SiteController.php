@@ -5,6 +5,7 @@ namespace app\controllers;
 use app\models\Article;
 use app\models\ArticleSearch;
 use app\models\Category;
+use app\models\Tag;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\data\Pagination;
@@ -56,35 +57,32 @@ class SiteController extends Controller
     }
 
 
-    function actionIndex()
-    {
-        $articles = new ActiveDataProvider([
+
+
+    public static function getCategory(){
+        return new ActiveDataProvider([
+            'query' => Category::find(),
+            'pagination' => false,
+        ]);
+    }
+
+    public static function getArticles(){
+        return  new ActiveDataProvider([
             'query' => Article::find()->where(['status' => 1])->orderBy('id DESC'),
             'pagination' => [
                 'pageSize' => 10,
             ],
         ]);
+    }
 
+    function actionIndex()
+    {
+        $articles = $this::getArticles();
 
-        $popular = new ActiveDataProvider([
-            'query' => Article::find()->orderBy('viewed DESC')->limit(3),
-            'pagination' => false,
-        ]);
-
-        $recent = new ActiveDataProvider([
-            'query' => Article::find()->orderBy('date DESC')->limit(4),
-            'pagination' => false,
-        ]);
-
-        $category = new ActiveDataProvider([
-            'query' => Category::find(),
-            'pagination' => false,
-        ]);
+        $category = $this::getCategory();
 
         return $this->render('index', [
             'articles'=>$articles,
-            'popular'=>$popular,
-            'recent'=>$recent,
             'category'=>$category,
         ]);
     }
@@ -135,8 +133,20 @@ class SiteController extends Controller
         return $this->render('about');
     }
 
-    public function actionView(){
-        return $this->render('view');
+    public function actionView($id){
+        $article = new ActiveDataProvider([
+            'query' => Article::find()->where(['id'=>$id]),
+            'pagination' => [
+                'pageSize' => false,
+            ],
+        ]);
+
+        $category = $this::getCategory();
+
+        return $this->render('view',[
+            'article'=>$article,
+            'category'=>$category,
+        ]);
     }
 
 

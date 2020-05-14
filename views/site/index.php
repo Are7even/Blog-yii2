@@ -1,8 +1,11 @@
 <?php
 
+use app\widgets\CategoryWidget;
+use app\widgets\RecentWidget;
 use yii\grid\GridView;
 use yii\widgets\LinkPager;
 use yii\widgets\ListView;
+use app\widgets\PopularWidget;
 
 ?>
 <!--main content start-->
@@ -34,36 +37,16 @@ use yii\widgets\ListView;
 
                     <aside class="widget">
                         <h3 class="widget-title text-uppercase text-center">Popular Posts</h3>
-                        <?=
-                        ListView::widget([
-                            'dataProvider' => $popular,
-                            'options' => [
-                                'tag' => 'div',
-                                'class' => 'list-wrapper',
-                                'id' => 'list-wrapper',
-                            ],
-                            'layout' => "{items}\n{pager}",
-                            'itemView' => '_item-popular',
-                        ]);
-                        ?>
+
+                        <?= PopularWidget::widget(); ?>
+
                     </aside>
 
 
                     <aside class="widget pos-padding">
                         <h3 class="widget-title text-uppercase text-center">Recent Posts</h3>
 
-                        <?=
-                        ListView::widget([
-                            'dataProvider' => $recent,
-                            'options' => [
-                                'tag' => 'div',
-                                'class' => 'list-wrapper',
-                                'id' => 'list-wrapper',
-                            ],
-                            'layout' => "{items}\n{pager}",
-                            'itemView' => '_item-recent',
-                        ]);
-                        ?>
+                    <?= RecentWidget::widget() ;?>
 
                     </aside>
                     <aside class="widget border pos-padding">
@@ -71,16 +54,7 @@ use yii\widgets\ListView;
                         <ul>
 
                             <?=
-                            ListView::widget([
-                                'dataProvider' => $category,
-                                'options' => [
-                                    'tag' => 'div',
-                                    'class' => 'list-wrapper',
-                                    'id' => 'list-wrapper',
-                                ],
-                                'layout' => "{items}\n{pager}",
-                                'itemView' => '_item-category',
-                            ]);
+                            CategoryWidget::widget();
                             ?>
 
                         </ul>
