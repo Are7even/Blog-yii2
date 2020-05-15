@@ -1,12 +1,17 @@
+<?php
+
+use yii\helpers\Url;
+
+?>
 <article class="post">
     <div class="post-thumb">
-        <a href="blog.html"><img src="<?= $model->getImage();?>" alt=""></a>
+        <a href="<?= Url::toRoute(['/site/view','id'=>$model->id])?>"><img src="<?= $model->getImage();?>" alt=""></a>
     </div>
     <div class="post-content">
         <header class="entry-header text-center text-uppercase">
-            <h6><a href="#"><?= $model->category->title?></a></h6>
+            <h6><a href="<?php echo Url::toRoute(['site/category','id'=>$model->category->id]) ?>"><?= $model->category->title?></a></h6>
 
-            <h1 class="entry-title"><a href="blog.html"><?= $model->title;?></a></h1>
+            <h1 class="entry-title"><?= $model->title;?></h1>
 
 
         </header>
@@ -26,7 +31,7 @@
         <?php endif;?>
         <div class="social-share">
 							<span
-                                class="social-share-title pull-left text-capitalize">By Rubel On February 12, 2016</span>
+                                class="social-share-title pull-left text-capitalize"><?= $model->getDate();?></span>
             <ul class="text-center pull-right">
                 <li><a class="s-facebook" href="#"><i class="fa fa-facebook"></i></a></li>
                 <li><a class="s-twitter" href="#"><i class="fa fa-twitter"></i></a></li>

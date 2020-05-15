@@ -58,7 +58,6 @@ class SiteController extends Controller
 
 
 
-
     function actionIndex()
     {
         $articles =  new ActiveDataProvider([
@@ -134,8 +133,17 @@ class SiteController extends Controller
     }
 
 
-    public function actionCategory(){
-        return $this->render('category');
+    public function actionCategory($id){
+        $articles =  new ActiveDataProvider([
+            'query' => Article::find()->where(['category_id' => $id]),
+            'pagination' => [
+                'pageSize' => 10,
+            ],
+        ]);
+
+        return $this->render('category', [
+            'articles'=>$articles,
+        ]);
     }
 
 }
