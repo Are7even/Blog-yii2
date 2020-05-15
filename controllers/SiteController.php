@@ -59,31 +59,17 @@ class SiteController extends Controller
 
 
 
-    public static function getCategory(){
-        return new ActiveDataProvider([
-            'query' => Category::find(),
-            'pagination' => false,
-        ]);
-    }
-
-    public static function getArticles(){
-        return  new ActiveDataProvider([
+    function actionIndex()
+    {
+        $articles =  new ActiveDataProvider([
             'query' => Article::find()->where(['status' => 1])->orderBy('id DESC'),
             'pagination' => [
                 'pageSize' => 10,
             ],
         ]);
-    }
-
-    function actionIndex()
-    {
-        $articles = $this::getArticles();
-
-        $category = $this::getCategory();
 
         return $this->render('index', [
             'articles'=>$articles,
-            'category'=>$category,
         ]);
     }
 
@@ -141,11 +127,9 @@ class SiteController extends Controller
             ],
         ]);
 
-        $category = $this::getCategory();
 
         return $this->render('view',[
             'article'=>$article,
-            'category'=>$category,
         ]);
     }
 
