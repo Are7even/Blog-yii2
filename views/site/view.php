@@ -12,8 +12,6 @@ use yii\widgets\ListView;
         <div class="row">
             <div class="col-md-8">
 
-
-
                <?php echo ListView::widget([
                 'dataProvider' => $article,
                 'options' => [

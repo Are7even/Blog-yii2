@@ -14,8 +14,6 @@ use app\widgets\PopularWidget;
         <div class="row">
             <div class="col-md-8">
 
-
-
                 <?=
                 ListView::widget([
                     'dataProvider' => $articles,
@@ -28,10 +26,8 @@ use app\widgets\PopularWidget;
                     'itemView' => '_item',
                 ]);
                 ?>
-                
-
-
             </div>
+
             <div class="col-md-4" data-sticky_column>
                 <div class="primary-sidebar">
 
