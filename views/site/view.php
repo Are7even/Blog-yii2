@@ -3,6 +3,8 @@
 use app\widgets\CategoryWidget;
 use app\widgets\PopularWidget;
 use app\widgets\RecentWidget;
+use yii\helpers\Html;
+use yii\widgets\ActiveForm;
 use yii\widgets\ListView;
 
 ?>
@@ -125,46 +127,46 @@ use yii\widgets\ListView;
 <!--                    </div>-->
 <!--                </div>-->
 
-                <div class="bottom-comment"><!--bottom comment-->
-                    <h4>3 comments</h4>
+                <?php echo ListView::widget([
+                    'dataProvider' => $comments,
+                    'options' => [
+                        'tag' => 'div',
+                        'class' => 'list-wrapper',
+                        'id' => 'list-wrapper',
+                    ],
+                    'layout' => "{items}\n{pager}",
+                    'itemView' => '_item-comment',
+                ]);
+                ?>
 
-                    <div class="comment-img">
-                        <img class="img-circle" src="/public/images/comment-img.jpg" alt="">
-                    </div>
-
-                    <div class="comment-text">
-                        <a href="#" class="replay btn pull-right"> Replay</a>
-                        <h5>Rubel Miah</h5>
-
-                        <p class="comment-date">
-                            December, 02, 2015 at 5:57 PM
-                        </p>
-
-
-                        <p class="para">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed
-                            diam nonumy
-                            eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam
-                            voluptua. At vero eos et cusam et justo duo dolores et ea rebum.</p>
-                    </div>
-                </div>
                 <!-- end bottom comment-->
 
-
+<?php if (!Yii::$app->user->isGuest): ?>
                 <div class="leave-comment"><!--leave comment-->
                     <h4>Leave a reply</h4>
 
+                    <?php if (Yii::$app->session->getFlash('comment')): ?>
+                    <div class="alert alert-success" role="alert">
+                        <?php echo Yii::$app->session->getFlash('comment');?>
+                    </div>
+                    <?php endif; ?>
 
-                    <form class="form-horizontal contact-form" role="form" method="post" action="#">
+                    <?php $form = ActiveForm::begin([
+                        'action'=>['site/comment', 'id'=>$articleModel->id],
+                        'options'=>['class'=>'form-horizontal contact-form', 'role'=>'form']])?>
 
                         <div class="form-group">
                             <div class="col-md-12">
-										<textarea class="form-control" rows="6" name="message"
-                                                  placeholder="Write Massage"></textarea>
+                                <?php echo $form->field($commentForm,'comment')->textarea(['class'=>'form-control','rows'=>6,'placeholder'=>'Write Massage'])->label(false) ?>
                             </div>
                         </div>
-                        <a href="#" class="btn send-btn">Post Comment</a>
-                    </form>
+<!--                        <button type="submit" class="btn send-btn"></button>-->
+                        <?php echo Html::submitButton('Post Comment', ['class' => 'btn send-btn']) ?>
+
+                    <?php ActiveForm::end()?>
                 </div><!--end leave comment-->
+<?php endif;?>
+
             </div>
             <div class="col-md-4" data-sticky_column>
                 <div class="primary-sidebar">

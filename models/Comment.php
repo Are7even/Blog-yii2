@@ -19,17 +19,16 @@ use Yii;
  */
 class Comment extends \yii\db\ActiveRecord
 {
-    /**
-     * {@inheritdoc}
-     */
+
+    public $statusActive = 1;
+    public $statusDisable = 0;
+
     public static function tableName()
     {
         return 'comment';
     }
 
-    /**
-     * {@inheritdoc}
-     */
+
     public function rules()
     {
         return [
@@ -74,5 +73,19 @@ class Comment extends \yii\db\ActiveRecord
     public function getUser()
     {
         return $this->hasOne(User::className(), ['id' => 'user_id']);
+    }
+
+    public function getDate(){
+        return Yii::$app->formatter->asDate($this->date, 'long');
+    }
+
+    public function allow(){
+         $this->status = $this->statusActive;
+         return $this->save(false);
+    }
+
+    public function disallow(){
+        $this->status = $this->statusDisable;
+        return $this->save(false);
     }
 }

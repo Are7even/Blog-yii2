@@ -5,6 +5,8 @@ namespace app\controllers;
 use app\models\Article;
 use app\models\ArticleSearch;
 use app\models\Category;
+use app\models\Comment;
+use app\models\CommentForm;
 use app\models\Tag;
 use Yii;
 use yii\data\ActiveDataProvider;
@@ -18,6 +20,8 @@ use app\models\ContactForm;
 
 class SiteController extends Controller
 {
+
+    public $statusActive = 1;
 
     public function behaviors()
     {
@@ -94,6 +98,9 @@ class SiteController extends Controller
     }
 
     public function actionView($id){
+        $commentForm = new CommentForm();
+        $articleModel = Article::find()->where(['id'=>$id])->one();
+
         $article = new ActiveDataProvider([
             'query' => Article::find()->where(['id'=>$id]),
             'pagination' => [
@@ -101,9 +108,18 @@ class SiteController extends Controller
             ],
         ]);
 
+        $comments = new ActiveDataProvider([
+            'query' => Comment::find()->where(['article_id'=>$id])->andWhere(['status'=>$this->statusActive]),
+            'pagination' => [
+                'pageSize' => false,
+            ],
+        ]);
 
         return $this->render('view',[
             'article'=>$article,
+            'comments'=>$comments,
+            'commentForm'=>$commentForm,
+            'articleModel'=>$articleModel,
         ]);
     }
 
@@ -119,6 +135,19 @@ class SiteController extends Controller
         return $this->render('category', [
             'articles'=>$articles,
         ]);
+    }
+
+    public function actionComment($id){
+        $model = new CommentForm();
+        if (Yii::$app->request->isPost){
+
+            $model->load(Yii::$app->request->post());
+            if ($model->saveComment($id)){
+                Yii::$app->getSession()->setFlash('comment', 'Your comment will be added soon!');
+                return $this->redirect(['site/view','id'=>$id]);
+            }
+        }
+
     }
 
 }
