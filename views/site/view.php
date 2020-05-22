@@ -1,6 +1,7 @@
 <?php
 
 use app\widgets\CategoryWidget;
+use app\widgets\CommentWidget;
 use app\widgets\PopularWidget;
 use app\widgets\RecentWidget;
 use yii\helpers\Html;
@@ -127,17 +128,9 @@ use yii\widgets\ListView;
 <!--                    </div>-->
 <!--                </div>-->
 
-                <?php echo ListView::widget([
-                    'dataProvider' => $comments,
-                    'options' => [
-                        'tag' => 'div',
-                        'class' => 'list-wrapper',
-                        'id' => 'list-wrapper',
-                    ],
-                    'layout' => "{items}\n{pager}",
-                    'itemView' => '_item-comment',
-                ]);
-                ?>
+
+
+                <?php echo CommentWidget::widget(['id'=>$articleModel->id]); ?>
 
                 <!-- end bottom comment-->
 
@@ -173,19 +166,19 @@ use yii\widgets\ListView;
                     <aside class="widget">
                         <h3 class="widget-title text-uppercase text-center">Popular Posts</h3>
 
-                        <?= PopularWidget::widget(); ?>
+                        <?php echo PopularWidget::widget(); ?>
 
                     </aside>
                     <aside class="widget pos-padding">
                         <h3 class="widget-title text-uppercase text-center">Recent Posts</h3>
 
-                        <?= RecentWidget::widget() ;?>
+                        <?php echo RecentWidget::widget() ;?>
 
                     </aside>
                     <aside class="widget border pos-padding">
                         <h3 class="widget-title text-uppercase text-center">Categories</h3>
                         <ul>
-                         <?= CategoryWidget::widget(); ?>
+                         <?php echo CategoryWidget::widget(); ?>
                         </ul>
                     </aside>
                 </div>

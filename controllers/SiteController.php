@@ -108,16 +108,8 @@ class SiteController extends Controller
             ],
         ]);
 
-        $comments = new ActiveDataProvider([
-            'query' => Comment::find()->where(['article_id'=>$id])->andWhere(['status'=>$this->statusActive]),
-            'pagination' => [
-                'pageSize' => false,
-            ],
-        ]);
-
         return $this->render('view',[
             'article'=>$article,
-            'comments'=>$comments,
             'commentForm'=>$commentForm,
             'articleModel'=>$articleModel,
         ]);
